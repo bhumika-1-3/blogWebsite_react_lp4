@@ -42,6 +42,10 @@ margin-bottom: 2%;
 .taskDate,.taskTime{
     width: 60%;
 }
+.mainRow{
+    background-color: chartreuse;
+    font: 800;
+}
 @media(max-width:450px){
 
     table{

@@ -3,12 +3,32 @@ var addTaskBtn=document.querySelector("#addtaskbtn");
 var deleteAll=document.querySelector('#deleteallbtn')
 var dateInput=document.querySelector('.taskDate');
 var timeInput=document.querySelector('.taskTime');
-var timeDisplay=0;
+var timeDisplay=0,com=0,order=0;
 var timeRecord=document.querySelector(".timeRecord"); 
+var compulsory=document.querySelector(".compulsory");
+var order=document.querySelector(".order");
+
+compulsory.addEventListener("change",function(){
+    if(this.checked===true)
+     com++;
+     else{
+       com--;
+         }
+  
+  })
+// order.addEventListener("change",function(){
+//     if(this.checked===true)
+//      alphaOrder++;
+//      else{
+//       alphaOrder--;
+//          }
+  
+//   })
+
 addTaskBtn.addEventListener("click",function(){
 
-    var dateInput=document.querySelector('.taskDate');
- dateSort=dateInput.value;
+var dateInput=document.querySelector('.taskDate');
+dateSort=dateInput.value;
 var timeInput=document.querySelector('.taskTime')
     // data is stored in local storage
     inputValue=addTaskInput.value;
@@ -26,12 +46,20 @@ var timeInput=document.querySelector('.taskTime')
         else{
             taskObj=JSON.parse(webTask);
         }
-        taskObj.push(inputValue);
+        taskObj.push({
+            task:inputValue,
+            time:timeInput.value,
+            date:dateSort,
+            compl:com
+        }
+            );
         localStorage.setItem("localTask",JSON.stringify(taskObj));
         showTask();
     } 
  addTaskInput.value='';
-
+dateInput.value='';
+timeInput.value='';
+ 
 })
 
 function showTask(){
@@ -45,46 +73,89 @@ function showTask(){
     }
     var html='';
 var table=document.querySelector("tbody");
+// if(order==0){
+taskObj.sort((a, b) => {
+    if (a.compl < b.compl) {
+        return 1;
+    }
+    else {
+        return -1;
+    }
+})
+// }
+// else {
+//         // alphabetical order
 
-// const sortedTasks = taskObj.sort((a, b) => {
-//     if (a.dateInput < b.dateInput) {
+// taskObj.sort((a, b) => {
+//     let fa = a.task,
+//         fb = b.task;
+
+//     if (fa < fb) {
+//         return -1;
+//     }
+//     if (fa > fb) {
 //         return 1;
 //     }
-//     else {
-//         return -1;
+//     return 0;
+// });
+// }
 
-// }})
 taskObj.forEach((item,index)=>{
+//     if(item.compl==1){
+
     
-html+= `<tr class="listItem text-center">
+// html+= `<tr class="listItem text-center table-danger">
+//         <th>${index+1}</th>
+//         <td>${item.task}</td>
+//         <td>${item.date}</td>
+//         <td>${item.time}</td>
+//         <td class="text-center">
+//         <button onclick="completedButton(${index})" class="btn btn-md btn-success "><i class="fas fa-check"></i></button>
+        
+//         <button onclick="deleteButton(${index})" class="delete btn btn-md btn-danger" disabled><i class="fas fa-trash-alt"></i></button>
+        
+//         <button onclick="editButton(${index})" class='btn btn-md btn-light'><i class="fas fa-user-edit"></i></button>
+//         </td>
+//         </tr>            
+// `
+//     }
+// else{
+    html+= `<tr class="listItem text-center ">
         <th>${index+1}</th>
-        <td>${item}</td>
-        <td>${dateSort}</td>
-        <td>${timeInput.value}</td>
+        <td>${item.task}</td>
+        <td>${item.date}</td>
+        <td>${item.time}</td>
         <td class="text-center">
         <button onclick="completedButton(${index})" class="btn btn-md btn-success "><i class="fas fa-check"></i></button>
         
-        <button onclick="deleteButton(${index})" class=" btn btn-md btn-danger"><i class="fas fa-trash-alt"></i></button>
+        <button onclick="deleteButton(${index})" class="delete btn btn-md btn-danger"><i class="fas fa-trash-alt"></i></button>
         
         <button onclick="editButton(${index})" class='btn btn-md btn-light'><i class="fas fa-user-edit"></i></button>
         </td>
         </tr>            
 `
+// }
+
 })
+
  table.innerHTML= html;
 }
 
 // edit button
 function editButton(index){
+compulsory.disabled=true;
     let saveIndex=document.querySelector("#saveindex");
     let addTaskBtn=document.querySelector("#addtaskbtn");
     let saveTaskBtn=document.querySelector("#savetaskbtn");
     saveIndex.value=index;
     let webTask =localStorage.getItem("localTask");
     let taskObj=JSON.parse(webTask);
-    addTaskInput.value=taskObj[index];
+    addTaskInput.value=taskObj[index].task;
+    dateInput.value=taskObj[index].date;
+    timeInput.value=taskObj[index].time;
     addTaskBtn.style.display='none';
     saveTaskBtn.style.display='inline';
+
 }
 
 // to save the edited data
@@ -94,13 +165,16 @@ saveTaskBtn.addEventListener("click",function(){
   let webTask =localStorage.getItem("localTask");
   let taskObj=JSON.parse(webTask);
   let saveIndex=document.querySelector("#saveindex").value;
-  taskObj[saveIndex]=addTaskInput.value;
+  taskObj[saveIndex].task=addTaskInput.value;
+  taskObj[saveIndex].date=dateInput.value;
+  taskObj[saveIndex].time=timeInput.value;
   saveTaskBtn.style.display='none';
   addTaskBtn.style.display='inline'; 
   localStorage.setItem("localTask",JSON.stringify(taskObj));
 showTask();
 addTaskInput.value='';
-
+dateInput.value='';
+timeInput.value='';
 })  
 // delete the element
 function deleteButton(index){
@@ -161,3 +235,8 @@ function completedButton(index){
 window.onbeforeunload = function (e) {
     localStorage.clear();
 };
+
+
+saveTaskBtn.addEventListener("click",function(){
+    compulsory.disabled=false;
+})
