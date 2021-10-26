@@ -66,7 +66,7 @@ export default function SignInSide() {
                         sm={4}
                         md={7}
                         sx={{
-                            backgroundImage: 'url(https://images.pexels.com/photos/3078831/pexels-photo-3078831.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500)',
+                            backgroundImage: 'url(https://images.pexels.com/photos/7492172/pexels-photo-7492172.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500)',
                             backgroundRepeat: 'no-repeat',
                             backgroundColor: (t) =>
                                 t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
@@ -189,7 +189,7 @@ export default function SignInSide() {
                                                     })
                                                     .catch(function (error) {
                                                         console.log(error);
-                                                        swal("Account already exists!", "error");
+                                                        swal("Account already exists!","Try logging in","error");
 
                                                     });
                                             }

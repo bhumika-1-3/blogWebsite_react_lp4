@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
+import Typical from 'react-typical'
 import CardMedia from '@mui/material/CardMedia';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
@@ -21,65 +22,75 @@ var axios = require('axios');
 var FormData = require('form-data');
 
 const AllPost = () => {
-    const [data, setData] = useState([]);
-    var axios = require('axios');
-    // console.log(aToken.data);
-    const atoken=localStorage.getItem('aToken')
-    console.warn(atoken);
-    var config = {
-        method: 'get',
-        url: 'http://dhirajssh.pythonanywhere.com/api/blogs/',
-        headers: {
-            'Authorization': `Bearer ${atoken}`
-        }
-    };
-    useEffect(() => {
-        axios(config)
-            .then(function (response) {
-                // console.log(JSON.stringify(response.data));
-                setData(response.data)
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    }, [data])
-    return (
-        <div>
-        {data.length}<center>
-                <h1>Trending</h1>
-                </center>
-                <Container sx={{ py: 2 }} maxWidth="lg">
-                <Grid container spacing={7}>
-            {data.map((x) => (
-              <Grid item key={x.id} xs={12} sm={6} md={4}>
-                <Card
-                  sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+  const [data, setData] = useState([]);
+  var axios = require('axios');
+  // console.log(aToken.data);
+
+  const atoken = localStorage.getItem('aToken')
+  console.warn(atoken);
+  var config = {
+    method: 'get',
+    url: 'http://dhirajssh.pythonanywhere.com/api/blogs/',
+    headers: {
+      'Authorization': `Bearer ${atoken}`
+    }
+  };
+  useEffect(() => {
+    axios(config)
+      .then(function (response) {
+        // console.log(JSON.stringify(response.data));
+        setData(response.data)
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, [data])
+
+  localStorage.setItem('blogs', data.length)
+  return (
+    <div>
+      <center>
+      <Typical
+        steps={['Trending', 1000, 'Trending Blogs', 500]}
+        loop={Infinity}
+        wrapper='h1'
+      />
+      </center>
+      <Container sx={{ py: 2 }} maxWidth="lg" >
+        <Grid container spacing={7}>
+          {data.map((x) => (
+            <Grid item key={x.id} xs={12} sm={6} md={4}>
+              <Card 
+                sx={{ height: '80%', display: 'flex', flexDirection: 'column' }}
+              >
+                <CardMedia
+                  component="img"
+                  sx={{
+                    // 16:9
+                    pt: '56.25%',
+                  }}
+                  image="https://source.unsplash.com/random"
+                  // image={x.image}
+                  alt="random"
+                  className='allImg'
+                />
+                <CardContent 
+                  className='allImg'
                 >
-                  <CardMedia
-                    component="img"
-                    sx={{
-                      // 16:9
-                      pt: '56.25%',
-                    }}
-                    image="https://source.unsplash.com/random"
-                    // image={x.image}
-                    alt="random"
-                  />
-                  <CardContent >
-                    <Typography gutterBottom variant="h5" component="h2" >
-                      {x.title}
-                    </Typography>
-                    <Typography>
-                     {x.description}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-            </Container>
-        </div>
-    )
+                  <Typography gutterBottom variant="h5" component="h2" >
+                    {x.title}
+                  </Typography>
+                  <Typography>
+                    {x.description}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
+    </div>
+  )
 }
 
 export default AllPost

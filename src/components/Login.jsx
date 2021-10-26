@@ -3,8 +3,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -13,6 +11,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Validation from './Validation';
 import { useHistory } from 'react-router';
+import { FormHelperText } from '@mui/material';
 import swal from 'sweetalert';
 const theme = createTheme();
 
@@ -47,8 +46,11 @@ export default function Login() {
 
 
     return (
+
+
         <ThemeProvider theme={theme}>
-            <Container component="main" maxWidth="xs"
+            <img width='100%' height='720px' src='https://images.pexels.com/photos/4671738/pexels-photo-4671738.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500' alt='bg' />
+            <Container component="main" maxWidth="xs" className='loginP'
                 onMouseOver={() => {
                     setErrors(Validation(value))
                     if (errors.email == "") {
@@ -59,18 +61,19 @@ export default function Login() {
                         setValid(false)
                     }
                     if (valid === true) {
-                                    axios(config)
-                                        .then(function (response) {
-                                            console.log(JSON.stringify(response.data));
-                                            console.log(JSON.stringify(response.data.access));
-                                            setToken(
-                                                JSON.stringify(response.data.access)
-                                            )
-                                        })
-                                        .catch(function (error) {
-                                            console.log(error);
-                                        });
-                                }
+                        axios(config)
+                            .then(function (response) {
+                                console.log(JSON.stringify(response.data));
+                                console.log(JSON.stringify(response.data.access));
+                                setToken(
+                                    JSON.stringify(response.data.access)
+                                )
+                                localStorage.setItem('auth',JSON.stringify(response.data))
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
+                    }
                 }}
             >
                 <CssBaseline />
@@ -94,6 +97,7 @@ export default function Login() {
                             onChange={(event) => {
                                 handleChanges(event)
                             }}
+                            color='secondary'
                             required
                             fullWidth
                             id="email"
@@ -101,26 +105,59 @@ export default function Login() {
                             name="email"
                             autoComplete="email"
                             autoFocus
+                            style={{width:'23rem'}}
                         />
+                           {errors.email ?
+                                    <FormHelperText error>{errors.email}</FormHelperText>
+                                    :
+                                    <FormHelperText style={{ visibility: 'hidden' }}>..</FormHelperText>
+
+                                }
                         <TextField
                             value={value.password}
                             onChange={(event) => {
                                 handleChanges(event)
+                                setErrors(Validation(value))
+                                if (errors.email == "") {
+                                    setValid(true)
+
+                                }
+                                else {
+                                    setValid(false)
+                                }
+                                if (valid === true) {
+                                    axios(config)
+                                        .then(function (response) {
+                                            console.log(JSON.stringify(response.data));
+                                            console.log(JSON.stringify(response.data.access));
+                                            setToken(
+                                                JSON.stringify(response.data.access)
+                                            )
+                                        })
+                                        .catch(function (error) {
+                                            console.log(error);
+                                        });
+                                }
                             }}
                             margin="normal"
                             required
                             fullWidth
                             name="password"
                             label="Password"
+                            color='secondary'
+
                             type="password"
                             id="password"
                             autoComplete="current-password"
+
                         />
 
                         <Button
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
+                            color='secondary'
+
                             onMouseOver={() => {
                                 // if (valid === true) {
                                 //     axios(config)
@@ -139,7 +176,7 @@ export default function Login() {
                             onClick={() => {
 
                                 if (token == '') {
-                                    swal("Account doesn't exists!", "error");
+                                    swal("Account doesn't exists!","Try again","error");
                                 }
                                 else {
                                     history.push(`/blog/${token}`)

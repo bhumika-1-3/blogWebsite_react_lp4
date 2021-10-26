@@ -1,4 +1,3 @@
-import { useParams } from 'react-router';
 import React, { useState, useEffect } from 'react';
 import { Button } from '@mui/material';
 import { Link } from 'react-router-dom';
@@ -11,11 +10,12 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
+import '../App.css'
+import {TiArrowForward} from 'react-icons/ti'
 import DeletePost from './DeletePost';
-import EditPost from './EditPost';
-var axios = require('axios');
 const MyPost = () => {
   const [data, setData] = useState([]);
+
   var axios = require('axios');
   const aToken = localStorage.getItem('aToken')
   var config = {
@@ -36,44 +36,62 @@ const MyPost = () => {
   }, [data])
   const history = useHistory();
   return (
-    <div>
-      <Grid container spacing={2}>
-        <Grid item xs={8}>
-          <Container maxWidth='md' style={{ paddingTop: '50px' }}>
-            <Carousel>
-              {
-                data.map((item, i) => {
-                  return <center>
-                    <div>
-                      {/* {item.image} */}
-                      <img width='850px' height='550px' src='https://images.pexels.com/photos/3078831/pexels-photo-3078831.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500' alt='' />
-                      {/* <h1>{item.title}</h1> */}
+    <div >
+      {data.length == '0' ?
+        <center style={{backgroundColor:'black',paddingBottom:'50px',color:'white'}}>
+        <img width='850px' height='550px' src='https://images.pexels.com/photos/5598293/pexels-photo-5598293.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500' alt='' />
+        <TiArrowForward  className='arrow'/>
+        <br/>
+        <span style={{color:'grey'}}>Begin posting:&nbsp;</span>
+        <Link to="/AddPost" style={{ textDecoration: 'none', color: 'black' }}>
+                <button style={{ width: '150px', backgroundColor: '#9C27B0', color: 'white', fontSize: '1.3rem', cursor: 'pointer',height:'2rem',borderRadius:'20px' }}
+                >Add +</button>
+              </Link>
+        </center>
+        : (
+          <Grid container spacing={2}>
+            <Grid item xs={8}>
+              <Container maxWidth='md' style={{ paddingTop: '50px' }}>
+                <Carousel>
+                  {
+                    data.map((item, i) => {
+                      return <center>
+                        <div>
+                          {/* {item.image} */}
+                          <img width='850px' height='550px' src='https://images.pexels.com/photos/3078831/pexels-photo-3078831.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500' alt='' />
+                          {/* <h1>{item.title}</h1> */}
 
-                    </div>
-                  </center>
-                })
-              }
-            </Carousel>
-          </Container>
-
-        </Grid>
-        <Grid item >
-          <h2 className='blogContent'>We are Creative &nbsp;
-            <br />
-            <span style={{ color: '#4F0174', fontSize: '5rem' }}> & </span>
-            Innovative
-          </h2>
-        </Grid>
-      </Grid>
+                        </div>
+                      </center>
+                    })
+                  }
+                </Carousel>
+              </Container>
+            </Grid>
+            <Grid item >
+              <h2 className='blogContent'>We are Creative &nbsp;
+                <br />
+                <span style={{ color: '#4F0174', fontSize: '5rem' }}> & </span>
+                Innovative
+              </h2>
+              <Link to="/AddPost" style={{ textDecoration: 'none', color: 'black' }}>
+                <button style={{ width: '150px', backgroundColor: '#9C27B0', color: 'white', fontSize: '1.3rem', cursor: 'pointer' }}
+                >Add +</button>
+              </Link>
+            </Grid>
+          </Grid>
+        )
+      }
       <h1>
         <Grid container spacing={4}>
           {data.map((x) => (
-            <Grid item key={x.id} xs={12} sm={6} md={4} style={{ transform: 'scale(.8)' }}>
+            <Grid item key={x.id} xs={12} sm={6} md={4} >
               <Card
-                sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+                sx={{ height: '80%', display: 'flex', flexDirection: 'column' }}
               >
                 <CardMedia
                   component="img"
+                  className='myImg'
                   sx={{
                     // 16:9
                     pt: '56.25%',
@@ -81,29 +99,32 @@ const MyPost = () => {
                   image="https://images.pexels.com/photos/3078831/pexels-photo-3078831.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
                   // image={x.image}
                   alt="random"
+
                 />
-                <CardContent sx={{ flexGrow: 1 }}>
+                <CardContent sx={{ flexGrow: 1 }}
+                  className='myData'
+                >
                   <Typography gutterBottom variant="h5" component="h2">
                     {x.title}
-                  </Typography>
-                  <Typography gutterBottom variant="h5" component="h3">
-                    MY POST
                   </Typography>
                   <Typography>
                     {x.description}
                   </Typography>
                 </CardContent>
-                <CardActions>
+                <CardActions
+                  className='myData'
+                >
                   {/* <Link to={`/EditPost/${aToken.data}`}> */}
                   {/* <Link to={`/AddPost/${aToken.data}`}> */}
-                  <Button size="md" color='secondary'
+                  <Button color='secondary' variant="contained" style={{ fontSize: '1.3rem', backgroundColor: '#9C27B0', color: 'white', borderRadius: '17px' }}
                     onClick={() => {
-                      localStorage.setItem('idE',x.id)
-                      history.push(`/EditPost/${aToken.data}`)
+
+                      localStorage.setItem('editData', JSON.stringify(x))
+                      history.push("/EditPost")
                     }}
                   >Edit</Button>
                   {/* </Link> */}
-                  <Button size="md" color='secondary' onClick={() => {
+                  <Button style={{ color: 'red' }} onClick={() => {
                     localStorage.setItem('idD', x.id)
                     DeletePost()
                   }}>Delete</Button>
