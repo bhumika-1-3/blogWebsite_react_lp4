@@ -22,11 +22,11 @@ function App() {
 <PrimarySearchAppBar/>
 <Blog/>
 </Route>
-<Route to="&AddPost"  exact >
+<Route path="&AddPost"  exact >
 <PrimarySearchAppBar/>
 <AddingNew/>
 </Route>
-<Route to="/EditPost"  exact>
+<Route path="/EditPost"  exact>
 <PrimarySearchAppBar/>
 <EditPost/>
 </Route>
