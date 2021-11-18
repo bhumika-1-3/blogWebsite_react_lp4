@@ -6,13 +6,13 @@ var data = new FormData();
 
 const DeletePost = (id) => {
   console.warn(id);
-  const aToken = localStorage.getItem('aToken')
+  const aToken =JSON.parse(localStorage.getItem('authToken'))
   const ids=localStorage.getItem('idD')
   var config = {
     method: 'delete',
     url: `http://dhirajssh.pythonanywhere.com/api/blogs/detail/${ids}/`,
     headers: {
-      'Authorization': `Bearer ${aToken}`,
+      'Authorization': `Bearer ${aToken.access}`,
       // ...data.getHeaders()
     },
     data: data
