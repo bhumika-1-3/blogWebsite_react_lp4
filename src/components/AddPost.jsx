@@ -129,6 +129,7 @@ class FileUpload extends React.Component {
     }
 
     handleInputChange(event) {
+        console.log(event.target);
         this.setState({
             selectedFile: event.target.files[0],
         })
@@ -140,8 +141,9 @@ class FileUpload extends React.Component {
         data.append('title', this.state.title)
         data.append('description', this.state.description)
         console.warn(this.state.selectedFile);
+        console.warn(this.state.selectedFile.name);
         console.warn(this.state);
-        let url = "http://localhost:8000/upload.php";
+        console.log(data);
         var config = {
             method: 'post',
             url: `http://dhirajssh.pythonanywhere.com/api/blogs/`,
@@ -157,7 +159,7 @@ class FileUpload extends React.Component {
         axios(config)
             .then(function (response) {
                 console.log(JSON.stringify(response.data));
-                transfer.history.push(`/blog/"${aToken}"`)
+                transfer.history.push(`/Blog`)
             })
             .catch(function (error) {
                 console.log(error);
@@ -187,8 +189,7 @@ class FileUpload extends React.Component {
                                     onChange={(e) => { this.setState({ title: e.target.value }) }}>
                                 </TextField>
                                 <TextField
-                                    autoFocus
-                                    name='image'
+                                    name='file'
                                     fullWidth
                                     type='file'
                                     onChange={this.handleInputChange}
